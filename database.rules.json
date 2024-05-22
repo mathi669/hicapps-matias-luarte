@@ -1,0 +1,13 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "pacientes": {
+      ".indexOn": ["accesible"]
+    },
+    "logs": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}
