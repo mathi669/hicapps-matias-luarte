@@ -1,10 +1,10 @@
 // Import the functions you need from the SDKs you need
 const initializeApp = require("firebase/app");
 const functions = require("firebase-functions");
-const admin = require("firebase-admin");
 require("firebase/database");
 const {v4: uuidv4} = require("uuid");
 require("dotenv").config();
+const getFirestore = require("firebase/firestore/lite");
 
 // config
 const firebaseConfig = {
@@ -18,11 +18,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-admin.initializeApp();
-
-const db = admin.database();
+const db = getFirestore(app);
 
 /**
  * Leer todos los pacientes
