@@ -1,36 +1,38 @@
 // Import the functions you need from the SDKs you need
-const initializeApp = require("firebase/app");
-const functions = require("firebase-functions");
-require("firebase/database");
-const {v4: uuidv4} = require("uuid");
-require("dotenv").config();
-const getFirestore = require("firebase/firestore/lite");
+import {initializeApp} from "firebase/app";
+import functions from "firebase-functions";
+import {getDatabase, ref, get, set, push} from "firebase/database";
+import {v4 as uuidv4} from "uuid";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 
 // config
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID,
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  databaseURL: process.env.DATABASE_URL,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
+console.log(app);
+const db = getDatabase(app);
 
 /**
  * Leer todos los pacientes
- * @param {Object} req - El objeto de solicitud HTTP.
- * @param {Object} res - El objeto de respuesta HTTP.
+ * @param {Object} req - objeto de solicitud HTTP.
+ * @param {Object} res - objeto de respuesta HTTP.
  * @returns {void}
  */
-exports.getAllPatients = functions.https.onRequest(async (req, res) => {
+export const getAllPatients = functions.https.onRequest(async (req, res) => {
   try {
-    const snapshot = await db.ref("pacientes").once("value");
+    const snapshot = await get(ref(db, "pacientes"));
     const patients = snapshot.val();
     await logAccess("GET", "/pacientes");
     res.status(200).json(patients);
@@ -45,10 +47,10 @@ exports.getAllPatients = functions.https.onRequest(async (req, res) => {
  * @param {Object} res - El objeto de respuesta HTTP.
  * @returns {void}
  */
-exports.getPatientById = functions.https.onRequest(async (req, res) => {
+export const getPatientById = functions.https.onRequest(async (req, res) => {
   const patientId = req.params[0];
   try {
-    const snapshot = await db.ref(`pacientes/${patientId}`).once("value");
+    const snapshot = await get(ref(db, `pacientes/${patientId}`));
     const patient = snapshot.val();
     if (patient) {
       if (patient.accesible === false) {
@@ -72,7 +74,7 @@ exports.getPatientById = functions.https.onRequest(async (req, res) => {
  * @param {Object} res - El objeto de respuesta HTTP.
  * @returns {void}
  */
-exports.createPatient = functions.https.onRequest(async (req, res) => {
+export const createPatient = functions.https.onRequest(async (req, res) => {
   const {
     nombre,
     apellidoPaterno,
@@ -90,7 +92,7 @@ exports.createPatient = functions.https.onRequest(async (req, res) => {
   };
 
   try {
-    await db.ref(`pacientes/${patientId}`).set(newPatient);
+    await set(ref(db, `pacientes/${patientId}`), newPatient);
     await logAccess("POST", "/pacientes");
     res.status(201).json({id: patientId, ...newPatient});
   } catch (error) {
@@ -110,5 +112,5 @@ async function logAccess(method, endpoint) {
     createdAt: Date.now(),
     message: `Acceso a endpoint ${method} ${endpoint}`,
   };
-  await db.ref("logs").push(logEntry);
+  await push(ref(db, "logs"), logEntry);
 }

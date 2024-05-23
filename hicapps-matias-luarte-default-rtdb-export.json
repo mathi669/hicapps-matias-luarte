@@ -1,0 +1,39 @@
+{
+  "logs": {
+    "-NybjkATkVPXe1Nd9IQ9": {
+      "createdAt": 1716506264721,
+      "message": "Acceso a endpoint POST /pacientes"
+    },
+    "-NybjzKzytGEFreKqH8F": {
+      "createdAt": 1716506326834,
+      "message": "Acceso a endpoint POST /pacientes"
+    },
+    "-Nybk1D9fWGxD8n6IsT8": {
+      "createdAt": 1716506338621,
+      "message": "Acceso a endpoint POST /pacientes"
+    }
+  },
+  "pacientes": {
+    "1f7119a2-3a1a-49ab-913e-e2a82f21c1e5": {
+      "accesible": false,
+      "apellidoMaterno": "Rodriguez",
+      "apellidoPaterno": "Sanchez",
+      "nombre": "Carlos",
+      "numeroSeguridadSocial": "1122334455"
+    },
+    "41a93a8f-0017-467c-9c70-8d162b13c7c2": {
+      "accesible": true,
+      "apellidoMaterno": "Gomez",
+      "apellidoPaterno": "Perez",
+      "nombre": "Juan",
+      "numeroSeguridadSocial": "123456789"
+    },
+    "5543a110-a594-4e48-92d8-a5ae5144d2e1": {
+      "accesible": true,
+      "apellidoMaterno": "Jara",
+      "apellidoPaterno": "de valle",
+      "nombre": "cata",
+      "numeroSeguridadSocial": "2314325"
+    }
+  }
+}
